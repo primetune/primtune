@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Playlist Home</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #121212;
+      color: #ffffff;
+    }
+
+    ul {
+      display: flex;
+      margin: 10px;
+      padding: 0;
+      list-style: none;
+    }
+
+    ul li a {
+      display: block;
+      padding: 5px 12px;
+      font-size: 12px;
+      text-decoration: none;
+      color: aliceblue;
+      border-radius: 10px;
+      transition: 0.3s;
+    }
+
+    ul li a:hover {
+      color: #000;
+      background-color: #fff;
+   }
+
+   .container {
+      display: flex;
+      flex-direction: column;
+      padding-left: 20px;
+   }
+
+   /* Body scrollbar - thin and dark */
+body::-webkit-scrollbar {
+  width: 6px;
+}
+
+body::-webkit-scrollbar-track {
+  background: #1e1e1e;
+  border-radius: 4px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 10px;
+}
+
+/* Optional: on hover, thumb becomes lighter */
+body::-webkit-scrollbar-thumb:hover {
+  background-color: #888;
+}
+
+
+   iframe {
+   border: none;
+   outline: none;
+   }
+
+   .ptext1 {
+      margin-top: 3px;
+      padding-bottom: 10px;
+      
+    }
+    .pcard1 {
+      position: relative;
+      bottom: 30px;
+      height: 190px;
+      
+   }
+
+   .ptext2 {  
+      margin-top: 10px;
+      padding-bottom: 15px;
+      margin-left: 5px;
+    }
+    .acard1 {
+      position: relative;
+      bottom: 35px;
+      height: 240px;
+   }
+
+   .ptext3 {
+      margin-top: 3px;
+      padding-bottom: 10px;
+      margin-left: 5px;
+    }
+    .pcard2 {
+      position: relative;
+      bottom: 30px;
+      height: 190px;
+   }
+
+   .ptext4 {
+      margin-top: 3px;
+      padding-bottom: 10px;
+      margin-left: 5px;
+    }
+    .pcard3 {
+      position: relative;
+      bottom: 30px;
+      height: 190px;
+   }
+
+   .ptext5 {  
+      margin-top: 10px;
+      padding-bottom: 15px;
+      margin-left: 5px;
+    }
+    .acard2 {
+      position: relative;
+      bottom: 35px;
+      height: 205px;
+   }
+
+   .ptext6 {  
+      margin-top: 10px;
+      padding-bottom: 15px;
+      margin-left: 5px;
+    }
+    .acard3 {
+      position: relative;
+      bottom: 35px;
+      height: 205px;
+   }
+
+
+ 
+
+  </style>
+</head>
+<body>
+
+  <ul>
+    <li><a href="#">All</a></li>
+    <li><a href="#">Music</a></li>
+    <li><a href="#">Podcasts</a></li>
+  </ul>
+
+   <div class="container">
+     <h4 class="ptext1">Made For You</h4>
+     <iframe class="pcard1" src="pcard1.html"></iframe>
+   </div>
+
+   <div class="container">
+     <h4 class="ptext2">Popular albums and singles</h4>
+     <iframe class="acard1" src="acard1.html"></iframe>
+   </div>
+
+   <div class="container">
+      <h4 class="ptext3">Superhit songs</h4>
+      <iframe class="pcard2" src="pcard2.html"></iframe>
+   </div>
+
+   <div class="container">
+      <h4 class="ptext4">Superhit songs</h4>
+      <iframe class="pcard3" src="pcard3.html"></iframe>
+   </div>
+
+   <div class="container">
+      <h4 class="ptext5">Popular albums and singles</h4>
+      <iframe class="acard2" src="acard2.html"></iframe>
+   </div>
+
+   <div class="container">
+      <h4 class="ptext6">Popular albums and singles</h4>
+      <iframe class="acard3" src="acard3.html"></iframe>
+   </div>
+
+
+</body>
+</html>

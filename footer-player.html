@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Spotify Style Footer Player</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Helvetica Neue', sans-serif;
+      background-color: transparent;
+    }
+
+    footer {
+      color: white;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      height: 60px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .song-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 300px;
+      margin-top: 7px;
+    }
+
+    .song-info img {
+      width: 45px;
+      height: 45px;
+      margin-left: 10px;
+      border-radius: 6px;
+      object-fit: cover;
+      opacity: 0;
+      filter: blur(10px);
+      transition: opacity 0.5s ease, filter 0.5s ease;
+    }
+    .song-info img.loaded {
+      opacity: 1;
+      filter: blur(0);
+    }
+
+    .song-info div {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .song-info #footerTitle {
+      font-weight: 600;
+      font-size: 13px;
+      color: white;
+    }
+
+    .song-info #footerArtist {
+      font-size: 13px;
+      color: #b3b3b3;
+    }
+
+    .controls {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      align-items: center;
+    }
+
+    .controls .btn-group-sm {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 0.35rem;
+      position: relative;
+      right: 90px;
+    }
+/*control input*/
+    .controls button {
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 15px;
+      transition: transform 0.2s ease;
+    }
+    .controls button:hover {
+      color: #0000FF;
+      transform: scale(1.2);
+    }
+    .controls button.play-btn {
+      background-color: white;
+      color: black;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .progress {
+      width: 300px;
+    }
+
+    .volume-control {
+      min-width: 120px;
+    }
+
+    input[type=range] {
+      width: 50%;
+      accent-color: #fff;
+    }
+
+    .active-btn {
+      color:  !important;
+    }
+
+input[type="range"] {
+  height: 4px;
+  accent-color: #0000ff;
+  background: #535353;
+  border-radius: 6px;
+  outline: none;
+  position: relative;
+  right: 75px;
+}
+
+/* Chrome, Safari, Edge */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 12px;
+  width: 12px;
+  background: rgb(255, 255, 255);
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: -4px; /* Adjusts thumb position */
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Firefox */
+input[type="range"]::-moz-range-thumb {
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+  </style>
+</head>
+<body>
+
+<footer>
+  <div class="song-info">
+    <img src="" alt="" id="footerThumb" />
+    <div>
+      <div id="footerTitle"></div>
+      <div id="footerArtist"></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="btn-group-sm">
+      <button onclick="toggleLoop(this)" title="Loop"><i class="fa-solid fa-repeat"></i></button>
+      <button onclick="prevSong()" title="Previous"><i class="fa-solid fa-backward-step"></i></button>
+      <button class="play-btn" onclick="togglePlayPause()" id="playPauseBtn"><i class="fa-solid fa-play"></i></button>
+      <button onclick="nextSong()" title="Next"><i class="fa-solid fa-forward-step"></i></button>
+      <button onclick="toggleShuffle(this)" title="Shuffle"><i class="fa-solid fa-shuffle"></i></button>
+    </div>
+    <input type="range" id="progressBar" value="0" min="0" max="100" onchange="seekProgress(this)">
+  </div>
+
+  <div class="volume-control">
+    <input type="range" min="0" max="1" step="0.01" value="1" onchange="setVolume(this)">
+  </div>
+</footer>
+
+<audio id="audioPlayer"></audio>
+
+<script>
+  const audio = document.getElementById("audioPlayer");
+  const footerTitle = document.getElementById("footerTitle");
+  const footerArtist = document.getElementById("footerArtist");
+  const footerThumb = document.getElementById("footerThumb");
+  const progressBar = document.getElementById("progressBar");
+  const playPauseBtn = document.getElementById("playPauseBtn");
+
+  let playlist = [];
+  let currentIndex = -1;
+  let isLooping = false;
+  let isShuffling = false;
+
+  function togglePlayPause() {
+    if (!audio.src) return;
+    const icon = playPauseBtn.querySelector('i');
+    if (audio.paused) {
+      audio.play();
+      icon.classList.remove("fa-play");
+      icon.classList.add("fa-pause");
+      sendVideoControl("play");
+    } else {
+      audio.pause();
+      icon.classList.remove("fa-pause");
+      icon.classList.add("fa-play");
+      sendVideoControl("pause");
+    }
+  }
+
+function playSong(song) {
+  audio.src = song.src;
+  footerTitle.textContent = song.title;
+  footerArtist.textContent = Array.isArray(song.artist)
+    ? song.artist.map(a => a.name).join(", ")
+    : song.artist.name;
+
+  footerThumb.classList.remove('loaded');
+  footerThumb.onload = function () {
+    footerThumb.classList.add('loaded');
+  };
+  footerThumb.src = song.thumb;
+
+  updateFooterBackgroundColor(song.thumb);
+
+  audio.play();
+  const icon = playPauseBtn.querySelector('i');
+  icon.classList.remove("fa-play");
+  icon.classList.add("fa-pause");
+
+  sendToVideoFrame(song);
+}
+
+
+  function updateFooterBackgroundColor(imageUrl) {
+    const img = new Image();
+    img.crossOrigin = "Anonymous";
+    img.src = imageUrl;
+    img.onload = function () {
+      const color = colorThief.getColor(img);
+      const gradient = `linear-gradient(to right, rgb(${color.join(",")}), #000000)`;
+      document.querySelector("footer").style.background = gradient;
+    };
+  }
+
+  function sendToVideoFrame(song) {
+    try {
+      const iframe1 = parent.document.getElementById("videoFrame");
+      if (iframe1 && iframe1.contentWindow) {
+        iframe1.contentWindow.postMessage({
+          type: "updateIframe1",
+          song: {
+            title: song.title,
+            artist: song.artist,
+            videoSrc: song.videoSrc
+          }
+        }, "*");
+      }
+    } catch (err) {
+      console.error("Error sending to videoFrame:", err);
+    }
+  }
+
+  function sendVideoControl(action) {
+    try {
+      const videoFrame = parent.document.getElementById("videoFrame");
+      if (videoFrame && videoFrame.contentWindow) {
+        videoFrame.contentWindow.postMessage({
+          type: "controlVideo",
+          action: action
+        }, "*");
+      }
+    } catch (err) {
+      console.error("Error sending video control:", err);
+    }
+  }
+
+  function nextSong() {
+    if (playlist.length === 0) return;
+    currentIndex = isShuffling
+      ? Math.floor(Math.random() * playlist.length)
+      : (currentIndex + 1) % playlist.length;
+    playSong(playlist[currentIndex]);
+  }
+
+  function prevSong() {
+    if (playlist.length === 0) return;
+    currentIndex = (currentIndex - 1 + playlist.length) % playlist.length;
+    playSong(playlist[currentIndex]);
+  }
+
+  function toggleLoop(btn) {
+    isLooping = !isLooping;
+    btn.classList.toggle("active-btn", isLooping);
+  }
+
+  function toggleShuffle(btn) {
+    isShuffling = !isShuffling;
+    btn.classList.toggle("active-btn", isShuffling);
+  }
+
+  function setVolume(slider) {
+    audio.volume = slider.value;
+  }
+
+  function seekProgress(slider) {
+    const seekTime = (slider.value / 100) * audio.duration;
+    audio.currentTime = seekTime;
+  }
+
+  audio.ontimeupdate = () => {
+    if (audio.duration) {
+      const percent = (audio.currentTime / audio.duration) * 100;
+      progressBar.value = percent;
+    }
+  };
+
+  audio.onended = () => {
+    if (isLooping) {
+      audio.currentTime = 0;
+      audio.play();
+    } else {
+      nextSong();
+    }
+  };
+
+  window.addEventListener("message", (event) => {
+    console.log("Received message:", event.data);
+
+    if (event.data.type === "PLAY_AUDIO") {
+      playSong(event.data.song); // ✅ এখানে শুধুমাত্র song object পাঠাতে হবে
+    } else if (event.data.type === "PAUSE_AUDIO") {
+      audio.pause();
+      const icon = playPauseBtn.querySelector('i');
+      icon.classList.remove("fa-pause");
+      icon.classList.add("fa-play");
+    } else if (event.data.type === 'updatePlayer') {
+      const { songList, song } = event.data;
+      playlist = songList;
+      currentIndex = playlist.findIndex(s => s.src === song.src);
+      playSong(song);
+
+    } else if (event.data.type === "playAlbum") {
+      playSong(event.data.song); 
+    }
+  });
+</script>
+<script src="footer-player.js?v=<?=Date.now()?>"></script>
+
+
+
+</body>
+</html>

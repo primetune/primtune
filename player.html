@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Music Player</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #000;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .player-header {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 10px 15px;
+    }
+
+    .player-header button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 20px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+
+    .player-body {
+      flex: 1;
+      display: ;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .player-body img {
+      width: 250px;
+      height: 250px;
+      border-radius: 10px;
+      object-fit: cover;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.7);
+    }
+
+    .song-info h2 {
+      margin: 5px 0;
+      font-size: 20px;
+    }
+
+    .song-info p {
+      margin: 0;
+      color: #ccc;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .controls button {
+      background-color: #1db954;
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 26px;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    audio {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="player-header">
+    <button onclick="toggleFullScreen()" title="Fullscreen">🔳</button>
+    <button onclick="minimizePlayer()" title="Minimize">📥</button>
+    <button title="More">⋮</button>
+  </div>
+
+  <div class="player-body">
+    <img id="thumbnail" src="" alt="Song Thumbnail">
+    <div class="song-info">
+      <h2 id="title">Loading...</h2>
+      <p id="artist">Please wait...</p>
+    </div>
+    <div class="controls">
+      <button onclick="togglePlay()" id="playBtn">▶</button>
+    </div>
+    <audio id="audioPlayer" controls autoplay></audio>
+  </div>
+
+
+  
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/iZiRbJQRf6I" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+
+
+
+
+
+  <button onclick="hideOtherFrames()">Collapse Frames</button>
+
+  <script>
+    const thumbnail = document.getElementById('thumbnail');
+    const title = document.getElementById('title');
+    const artist = document.getElementById('artist');
+    const audioPlayer = document.getElementById('audioPlayer');
+    const playBtn = document.getElementById('playBtn');
+    const videoPlayer = document.getElementById('videoPlayer');
+  
+    // ✅ postMessage থেকে তথ্য গ্রহণ
+    window.addEventListener('message', function (event) {
+      if (event.data.type === "updatePlayer" && event.data.song) {
+        loadSong(event.data.song);
+      }
+    });
+  
+    // ✅ গান লোড করার ফাংশন
+    function loadSong(song) {
+      if (!song) return;
+  
+      thumbnail.src = song.thumb || '';
+      title.textContent = song.title || 'Unknown Title';
+    
+      const artistName = Array.isArray(song.artist)
+        ? song.artist.map(a => a.name).join(", ")
+        : (song.artist?.name || song.artist || 'Unknown Artist');
+    
+      artist.textContent = artistName;
+      audioPlayer.src = song.src || '';
+      videoPlayer.src = song.videoSrc || '';
+      playBtn.disabled = false;
+    }
+  
+    // ✅ play/pause functionality
+    function togglePlay() {
+      if (audioPlayer.paused) {
+        audioPlayer.play();
+        playBtn.textContent = '⏸';
+      } else {
+        audioPlayer.pause();
+        playBtn.textContent = '▶';
+      }
+    }
+  
+    // ✅ full screen toggle for video player
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    }
+  
+    // ✅ minimize player
+    function minimizePlayer() {
+      parent.postMessage({ type: "minimizePlayer" }, "*");
+    }
+  
+    // ✅ hide other frames
+    function hideOtherFrames() {
+      parent.postMessage({ type: "hideAllFrames" }, "*");
+    }
+  
+    // ✅ show other frames
+    function showOtherFrames() {
+      parent.postMessage({ type: "showAllFrames" }, "*");
+    }
+  
+    // ✅ call the function to load the song when the page is loaded (if already selected)
+    const localSong = JSON.parse(localStorage.getItem('currentSong'));
+    if (localSong) {
+      loadSong(localSong);
+    } else {
+      title.textContent = "No song found";
+      artist.textContent = "Please go back and select a song.";
+      playBtn.disabled = true;
+    }
+  </script>
+  
+  
+  
+
+</body>
+</html>

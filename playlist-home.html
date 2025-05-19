@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>playlist Home</title>
+</head>
+
+
+<style>
+  body{
+   margin: 0;
+   padding: 0;
+   font-family: Arial, Helvetica, sans-serif;
+   font-weight: ;
+   background-color: rgb(17, 17, 17);
+   height: 100px;
+}
+ul{
+   position: absolute;
+   top: 0px;
+   left: 20px;
+   display: flex;
+   margin: 10px;
+   padding: 0px;
+}
+
+ul li{
+   list-style: none;
+}
+ul li a:hover{
+   color: rgb(0, 0, 0);
+   background-color: rgb(255, 255, 255);
+
+   
+}
+ul li a{
+   position: relative;
+   display: block;
+   text-align: ;
+   margin: px;
+   padding: 7px;
+   font-size: 12px;
+   font-family: Arial, Helvetica, sans-serif;
+   font-weight: ;
+   text-decoration: none;
+   transition: s; 
+   background-color: ;
+   border-radius: 10px;    
+}
+ul li a::after{
+   content: "";
+   position: absolute;
+   bottom: 0;
+   left: 0;
+   transition: s;
+}
+ul li a::before{
+   content: "";
+   position: absolute;
+   bottom: 0;
+   left: 0;
+   width: 70px;
+   height: 10px;
+   transition: s;
+
+   
+}
+a{
+   color: aliceblue;
+}
+</style>
+<body>
+
+  <ul>
+    <li><a href="">All</a></li>
+    <li><a href="">Music</a></li>
+    <li><a href="">Podcasts</a></li>
+ </ul> 
+
+</body>
+
+
+<style>
+  body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #121212;
+    color: #fff;
+    padding: 2rem;
+  }
+
+  h4 {
+    margin-bottom: 0.5rem;
+  }
+
+  .playlist-container {
+    
+    display: flex;
+    flex-direction: row;
+    overflow-x: ;
+    overflow-y: hidden;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .playlist-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+  }
+
+  .playlist-card {
+    background-color: #1e1e1e;
+    border-radius: 5px;
+    min-width: 120px;
+    max-width: 90px;
+    flex: 0 0 auto;
+    padding: 0.5rem;
+    scroll-snap-align: start;
+    transition: transform 0.3s;
+  }
+
+  .playlist-card:hover {
+    transform: scale(1.05);
+  }
+
+  .playlist-card img {
+    width: 100%;
+    border-radius: 8px;
+  }
+
+  .playlist-card h3 {
+    margin-top: 0.1rem;
+    font-size: 0.80rem;
+  }
+
+  .playlist-card p {
+    font-size: 0.70rem;
+    color: #bbb;
+  }
+</style>
+
+<body>
+
+
+  <h4>Made For You</h4>
+  <div class="playlist-container">
+    <div class="playlist-card">
+      <img src="img/Teri baton.jpeg" alt="Playlist 1" />
+      <h3>Chill Vibes</h3>
+      <p>Relaxing beats</p>
+    </div>
+    <div class="playlist-card">
+      <img src="Bollywood/laal peli.jpeg" alt="Playlist 2" />
+      <h4>Workout Mix</h4>
+      <p>Pump up energy</p>
+    </div>
+    <div class="playlist-card">
+      <img src="Bollywood/Teri baton.jpeg" alt="Playlist 3" />
+      <h4>Late Night</h4>
+      <p>Lo-fi & chill</p>
+    </div>
+    <div class="playlist-card">
+      <img src="Bollywood/Teri baton.jpeg" alt="Playlist 4" />
+      <h4>Late Night</h4>
+      <p>Lo-fi & chill</p>
+    </div>
+    <div class="playlist-card">
+      <img src="Bollywood/Teri baton.jpeg" alt="Playlist 5" />
+      <h4>Late Night</h4>
+      <p>Lo-fi & chill</p>
+    </div>
+    <div class="playlist-card">
+      <img src="Bollywood/Teri baton.jpegS" alt="Playlist 6" />
+      <h4>Late Night</h4>
+      <p>Lo-fi & chill</p>
+    </div>
+    <div class="playlist-card">
+      <img src="https://via.placeholder.com/150" alt="Playlist 7" />
+      <h4>Late Night</h4>
+      <p>Lo-fi & chill</p>
+    </div>
+    <div class="playlist-card">
+      <img src="https://via.placeholder.com/150" alt="Playlist 8" />
+      <h4>Late Night</h4>
+      <p>Lo-fi & chill</p>
+    </div>
+
+
+    <!-- Add more cards as needed -->
+  </div>
+
+</body>
+
+
+
+</html>

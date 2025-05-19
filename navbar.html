@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Spotify Style Navbar with Search</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    /* Body styling */
+    body {
+      margin: 0;
+      padding-top: ; /* navbar height */
+      background-color: #1db954bd;
+      overflow-x: hidden;
+      height: 100vh;
+    }
+
+    /* Navbar styling */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #000000;
+      height: 54px;
+      color: rgb(255, 255, 255);
+      z-index: 999;
+    }
+
+
+
+    .navbar-brand {
+      font-weight: bold;
+      color: #1db954;
+    }
+
+    .navbar-brand:hover {
+      color: #1ed760;
+    }
+
+    .nav-link {
+      color: #b3b3b3;
+    }
+
+    .nav-link:hover {
+      color: white;
+    }
+
+    .profile-pic {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .dropdown-menu {
+      background-color: #282828;
+      border: none;
+    }
+
+    .dropdown-item {
+      color: white;
+    }
+
+    .dropdown-item:hover {
+      background-color: #1db954;
+    }
+
+    .navbar-nav {
+
+    }
+    .search-container {
+      display: flex;
+      width: 380px;
+      justify-content: center;
+      align-items: center;
+      margin-right: 50px;
+    }
+
+    .searchbar {
+      width: 100%;
+      padding: 0.45rem;
+      font-size: 16px;
+      border-radius: 30px;
+      border: 1px solid #ddd;
+    }
+
+    /* Search Results Styling */
+    .search-results {
+      list-style: none;
+      padding: px;
+      margin-top: 5px;
+    }
+
+    .search-results li {
+      padding: 8px;
+      background-color: #333;
+      margin-bottom: 5px;
+      color: white;
+      border-radius: 5px;
+    }
+
+    .search-results li:hover {
+      background-color: #1db954;
+    }
+
+    iframe {
+      width: 100%;
+      height: calc(100vh - 54px);
+      border: none;
+      overflow: hidden;
+    }
+  </style>
+  
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Spotify</a>
+    <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+      </ul>
+<!-- Search Bar and Results -->
+<div class="search-container">
+  <input type="text" class="searchbar" id="searchInput" placeholder=" Search..." oninput="searchSongs()" />
+</div>
+
+
+    </div>
+
+    <div class="dropdown">
+      <a class="dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+        <img src="https://i.pravatar.cc/36" alt="profile" class="profile-pic me-2" />
+        <span class="text-white">Profile</span>
+      </a>
+      <ul class="dropdown-menu dropdown-menu-end">
+        <li><a class="dropdown-item" href="#">Account</a></li>
+        <li><a class="dropdown-item" href="#">Profile</a></li>
+        <li><a class="dropdown-item" href="#">Settings</a></li>
+        <li><hr class="dropdown-divider" /></li>
+        <li><a class="dropdown-item" href="#">Log Out</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+
+
+
+<ul id="searchResults" class="search-results"></ul>
+
+<!-- iframe to show profile content -->
+<iframe id="videoFrame" src="" frameborder="0"></iframe>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+function navigateTo(page) {
+    parent.postMessage({ target: 'centerFrame', page: page }, '*');
+  }
+  // Example song list (You can dynamically load this data from a database)
+  const songs = [
+    { name: 'Shape of You', artist: 'Ed Sheeran' },
+    { name: 'Blinding Lights', artist: 'The Weeknd' },
+    { name: 'Levitating', artist: 'Dua Lipa' },
+    { name: 'Rockstar', artist: 'Post Malone' },
+    { name: 'Happier', artist: 'Ed Sheeran' },
+    { name: 'Peaches', artist: 'Justin Bieber' },
+    { name: 'Save Your Tears', artist: 'The Weeknd' }
+  ];
+
+  // Search functionality
+  function searchSongs() {
+    const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+    const filteredSongs = songs.filter(song => 
+      song.name.toLowerCase().includes(searchQuery) || song.artist.toLowerCase().includes(searchQuery)
+    );
+    
+    // Show filtered songs in the search results
+    const resultsContainer = document.getElementById('searchResults');
+    resultsContainer.innerHTML = ''; // Clear previous results
+    
+    if (filteredSongs.length > 0) {
+      filteredSongs.forEach(song => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${song.name} - ${song.artist}`;
+        resultsContainer.appendChild(listItem);
+      });
+    } else {
+      const noResults = document.createElement('li');
+      noResults.textContent = 'No songs found.';
+      resultsContainer.appendChild(noResults);
+    }
+  }
+
+  // Profile Functionality
+  function showProfile() {
+    document.getElementById('videoFrame').src = '';  // Example profile page
+  }
+</script>
+
+</body>
+</html>

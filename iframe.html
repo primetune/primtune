@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home</title>
+
+
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      max-width: 100%;
+      overflow: hidden;
+      background-color: transparent;
+    }
+
+    /* Navbar */
+    .navbar {
+      height: 3vh;
+      background-color: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 999;
+
+    }
+    .search-container {
+      flex-grow: 1;
+      margin-left: 5px;
+      display: flex;
+    }
+    .search-results {
+      position: absolute;
+      top: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #53535379;
+      width: 200px;
+      font-size: 12px;
+      font-weight: bold;
+      font-family: Arial, Helvetica, sans-serif;
+      border-radius: 4px;
+      padding: 5px;
+      display: none;
+    }
+    .search-container input {
+      width: 100%;
+      max-width: 350px;
+      height: 25px;
+      font-size: 13px;
+      font-weight: bold;
+      padding: 2px 10px;
+      border-radius: 13px;
+      border: none;
+      outline: none;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+
+    .logo {
+      font-size: 12px;
+      color: #ffffff;
+      font-weight: bold;
+      font-family: Arial, Helvetica, sans-serif;
+      padding-left: 20px
+    }
+    .refresh{
+      font-size: 12px;
+      color: #ffffff;
+      font-weight: bold;
+      font-family: Arial, Helvetica, sans-serif;
+      padding-left: 410px;
+    }
+    .profile {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 20px;
+    }
+    
+
+    .search-results li {
+      list-style: none;
+      padding: 3px 5px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .search-results.hidden {
+     display: none;
+    }
+
+    .search-results li:hover {
+      background-color: #1db954;
+    }
+
+
+
+    /*IFRAME*/
+    .container {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      background-color: black;
+    }
+
+    iframe {
+      border: none;
+      height: 100%;
+      border-radius: 5px;
+      margin: 2px;
+    }
+
+    .left {
+      width: 20%;
+      height: 84%;
+      margin-top: 38px;
+    }
+
+    .center {
+      width: 60%;
+      height: 84%;
+      margin-top: 38px;
+    }
+
+    .right {
+      width: 20%;
+      height: 84%;
+      margin-top: 38px;
+    }
+
+    .footer{
+      position: absolute;
+      bottom: 0px;
+    }
+    .navbar{
+      position: absolute;
+      top: 0px;
+      width: 100%;
+
+
+    }
+
+    iframe {
+      border: none;
+      width: 100%;
+    }
+
+    #songPage {
+      height: 80vh;
+    }
+
+    #footerplayer {
+      height: 12vh;
+    }
+
+
+
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .left, .center, .right {
+        width: 100%;
+        height: 33.33%;
+      }
+    }
+
+
+    .expand-view {
+    position: absolute;
+    top: 45px; /* Adjust according to your navbar height */
+    bottom: 70px; /* Adjust according to footer height */
+    left: 0;
+    right: 0;
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .expand-view.show {
+    display: block;
+    opacity: 1;
+  }
+
+  .expand-view.hidden {
+    display: none;
+    opacity: 0;
+  }
+
+  .expand-view iframe {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* To hide frames */
+  .hidden-frame {
+    display: none !important;
+  }
+
+  .fade-in {
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+  }
+
+  .fade-out {
+    opacity: 1;
+    animation: fadeOut 0.5s forwards;
+  }
+
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    to {
+      opacity: 0;
+    }
+  }
+</style>
+</head>
+
+<body>
+
+  <div class="navbar">
+    <div class="logo">Spotify</div>
+    <div class="refresh">Home</div>
+  
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Search..." oninput="searchSongs()" />
+    </div>
+  
+    <img src="https://i.pravatar.cc/16" alt="profile" class="profile" />
+  </div>
+  
+  <ul id="searchResults" class="search-results"></ul>
+
+
+
+    <div class="container">
+      <iframe id="leftFrame"   src="playlistupdate.html"  class="left"></iframe>
+      <iframe id="centerFrame" src="songaddplaylist.html" class="center"></iframe>   
+      <iframe id="videoFrame"  src="right-footage.html"   class="right"></iframe>
+      <iframe id="iframe2"     src="footer-player.html"   class="footer" style="width: 100%; height: 10vh;" ></iframe>   
+    </div>
+
+
+    <div id="expandView" class="expand-view hidden">
+      <iframe id="expandFrame" src="" frameborder="0"></iframe>
+    </div>
+
+
+    <script>
+      // Message listener (footer-এ পাঠানোর জন্য)
+window.addEventListener('message', function(event) {
+    const iframe2 = document.getElementById('iframe2');
+    if (iframe2) {
+        iframe2.contentWindow.postMessage(event.data, '*');
+    }
+});
+
+//expand Function//
+window.addEventListener("message", function (event) {
+    const data = event.data;
+
+    if (data.type === "expandPlayer") {
+        // Animate in
+        const expandDiv = document.getElementById("expandView");
+        const expandFrame = document.getElementById("expandFrame");
+        expandFrame.src = "cover.html";
+        expandDiv.classList.remove("hidden");
+
+        // Show with animation
+        setTimeout(() => {
+            expandDiv.classList.add("show");
+
+            // ✅ যদি গান সংক্রান্ত data থাকে, তাহলে iframe এ পাঠাও
+            if (data.song) {
+                expandFrame.onload = () => {
+                    expandFrame.contentWindow.postMessage({
+                        type: "loadSong",    // Song load করার জন্য message পাঠানো হবে
+                        song: data.song
+                    }, "*");
+                };
+            }
+
+        }, 10);
+    }
+
+    if (data.type === "collapsePlayer") {
+        const expandDiv = document.getElementById("expandView");
+        expandDiv.classList.remove("show");
+        setTimeout(() => {
+            expandDiv.classList.add("hidden");
+            document.getElementById("expandFrame").src = "";
+        }, 300);
+    }
+
+    if (data.type === "hideAllFrames") {
+        document.getElementById("left-frame")?.classList.add("hidden-frame");
+        document.getElementById("center-frame")?.classList.add("hidden-frame");
+        document.getElementById("right-frame")?.classList.add("hidden-frame");
+    }
+
+    if (data.type === "showAllFrames") {
+        document.getElementById("left-frame")?.classList.remove("hidden-frame");
+        document.getElementById("center-frame")?.classList.remove("hidden-frame");
+        document.getElementById("right-frame")?.classList.remove("hidden-frame");
+    }
+
+    // ✅ Minimize Player with animation
+    if (data.type === "minimizePlayer") {
+        const expandDiv = document.getElementById("expandView");
+        const expandFrame = document.getElementById("expandFrame");
+        const centerFrame = document.getElementById("center-frame");
+        const rightFrame = document.getElementById("right-frame");
+
+        expandDiv.classList.remove("show");
+        expandDiv.classList.add("fade-out");
+
+        setTimeout(() => {
+            expandDiv.classList.add("hidden");
+            expandDiv.classList.remove("fade-out");
+            expandFrame.src = "";
+
+            centerFrame.classList.add("fade-in");
+            rightFrame.classList.add("fade-in");
+            centerFrame.style.display = "block";
+            rightFrame.style.display = "block";
+
+            setTimeout(() => {
+                centerFrame.classList.remove("fade-in");
+                rightFrame.classList.remove("fade-in");
+            }, 500);
+        }, 500);
+    }
+});
+
+// Dummy song list (Including thumbnail)
+const songs = [
+    { name: 'Shape of You', artist: 'Ed Sheeran', thumb: 'path_to_image1.jpg' },
+    { name: 'Blinding Lights', artist: 'The Weeknd', thumb: 'path_to_image2.jpg' },
+    { name: 'Levitating', artist: 'Dua Lipa', thumb: 'path_to_image3.jpg' },
+    { name: 'Rockstar', artist: 'Post Malone', thumb: 'path_to_image4.jpg' },
+    { name: 'Happier', artist: 'Ed Sheeran', thumb: 'path_to_image5.jpg' },
+    { name: 'Peaches', artist: 'Justin Bieber', thumb: 'path_to_image6.jpg' },
+    { name: 'Save Your Tears', artist: 'The Weeknd', thumb: 'path_to_image7.jpg' }
+];
+
+const searchInput = document.getElementById('searchInput');
+const resultsContainer = document.getElementById('searchResults');
+
+// Input দিলে suggestion দেখাও
+searchInput.addEventListener('input', function () {
+    const query = searchInput.value.toLowerCase();
+    resultsContainer.innerHTML = '';
+
+    if (query.trim() === '') {
+        resultsContainer.style.display = 'none';
+        return;
+    }
+
+    const filtered = songs.filter(song =>
+        song.name.toLowerCase().includes(query) || song.artist.toLowerCase().includes(query)
+    );
+
+    if (filtered.length > 0) {
+        filtered.forEach(song => {
+            const li = document.createElement('li');
+            li.textContent = `${song.name} - ${song.artist}`;
+            resultsContainer.appendChild(li);
+        });
+    } else {
+        const li = document.createElement('li');
+        li.textContent = 'No songs found.';
+        resultsContainer.appendChild(li);
+    }
+
+    resultsContainer.style.display = 'block';
+});
+
+// বাইরে ক্লিক করলে dropdown গায়েব
+document.addEventListener('click', function (event) {
+    if (!searchInput.contains(event.target) && !resultsContainer.contains(event.target)) {
+        resultsContainer.style.display = 'none';
+    }
+});
+
+ </script>
+    
+    
+    
+    
+</body>
+
+</head>
+</html>
